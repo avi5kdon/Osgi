@@ -1,4 +1,5 @@
 package com.some;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -14,4 +15,7 @@ public class Initialize extends SpringBootServletInitializer implements WebAppli
 		return builder.sources(SpringApplicationBuilder.class);
 	}
 
+	public static void main(String[] args) {
+		SpringApplication.run(Initialize.class, args);
+	}
 }
