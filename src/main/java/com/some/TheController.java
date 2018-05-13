@@ -1,37 +1,53 @@
 package com.some;
 
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TheController {
 
-	public void show() {
-	System.out.println("GAME");
-	}
+	@Autowired
+	RepositoryDAO repositoryDAO;
 	
-	@RequestMapping("/info")
-	public String getInfo(){
-		return "MF_INFO";
-	}
-	
-	public static void main(String[] args) {
-		int n = 3;
-		int[] array = {3,2,6};
-		int count=0;
-		for(int i=0;i<n;i++){
-			for(int j=0; j<n; j++){
-				
-				if(j==i){
-					continue;
-				}
-				if(array[j]%array[i]==0){
-					count++;
-				}
-
-				
-			}
+	@RequestMapping(method=RequestMethod.POST,value="/insert")
+	public ResponseEntity insert(@RequestBody AliceInWords aliceInWords){
+		if(aliceInWords != null && !StringUtils.isEmpty(aliceInWords.getWord()) && !StringUtils.isEmpty(aliceInWords.getWord())){
+			int numberx = repositoryDAO.insert(aliceInWords);
+			return ResponseEntity.ok("Successfully Inserted "+numberx+" Rows");
+			
+		}else{
+			return ResponseEntity.ok().body("Invalid Input");
 		}
-	System.out.println(count);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET,value="/get/{word}")
+	public ResponseEntity get(@PathVariable String word){
+		if(!StringUtils.isEmpty(word)){
+			String meaning = repositoryDAO.getMeaning(word);
+			return ResponseEntity.ok("meaning");
+			
+		}else{
+			return ResponseEntity.ok().body("Invalid Input");
+		}
+	}
+	
+	
+	@RequestMapping(method=RequestMethod.GET,value="/getAll")
+	public ResponseEntity getAll(){
+			List<AliceInWords> theList = repositoryDAO.getAll();
+			return ResponseEntity.ok(theList);
 	}
 }
