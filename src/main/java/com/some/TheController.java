@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 public class TheController {
@@ -63,4 +66,27 @@ public class TheController {
 		}
 	}
 	
+	@RequestMapping(method=RequestMethod.GET,value="/findNSave/{word}")
+	public ResponseEntity<String> findNSave(@PathVariable String word){
+		if(!StringUtils.isEmpty(word)){
+			try{
+			Document doc = Jsoup.connect("https://www.vocabulary.com/dictionary/"+word).get();
+			String response = doc.getElementsByClass("short").text();
+			if(!StringUtils.isEmpty(response)){
+				AliceInWords aliceInWords = new AliceInWords();
+				aliceInWords.setWord(StringUtils.capitalize(word));
+				aliceInWords.setMeaning(response);
+				int values = repositoryDAO.insert(aliceInWords);
+				System.out.println("Inserted Values "+values);
+			}
+			return ResponseEntity.ok(response);
+			}catch(Exception e){
+				return ResponseEntity.ok(e.getMessage());
+			}
+			
+		}else{
+			return ResponseEntity.badRequest().body("Fuch off");
+		}
+		
+	}
 }
