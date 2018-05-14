@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 @Repository
 public class RepositoryDAO {
@@ -20,8 +21,8 @@ public class RepositoryDAO {
 	public int insert(AliceInWords aliceInWords){
 		try {
 			PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement("insert into repository(word,meaning) values(?,?)");
-			preparedStatement.setString(1, aliceInWords.getWord());
-			preparedStatement.setString(2, aliceInWords.getMeaning());
+			preparedStatement.setString(1, StringUtils.capitalize(aliceInWords.getWord()));
+			preparedStatement.setString(2, StringUtils.capitalize(aliceInWords.getMeaning()));
 			return preparedStatement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -38,8 +39,8 @@ public class RepositoryDAO {
 				ResultSet resultSet =  preparedStatement.executeQuery();
 				while(resultSet.next()){
 					AliceInWords aliceInWords = new AliceInWords();
-					aliceInWords.setWord(resultSet.getString(1));
-					aliceInWords.setMeaning(resultSet.getString(2));
+					aliceInWords.setWord(StringUtils.capitalize(resultSet.getString(1)));
+					aliceInWords.setMeaning(StringUtils.capitalize(resultSet.getString(2)));
 					theList.add(aliceInWords);
 				}
 			} catch (SQLException e) {
@@ -53,7 +54,7 @@ public class RepositoryDAO {
 		String meaning = "Error!! Meaning not found";
 			try {
 				PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement("select meaning from repository where word=?");
-				preparedStatement.setString(1, word);
+				preparedStatement.setString(1, StringUtils.capitalize(word));
 				ResultSet resultSet =  preparedStatement.executeQuery();
 				while(resultSet.next()){
 					meaning = resultSet.getString(1);
@@ -61,7 +62,7 @@ public class RepositoryDAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			return meaning;
+			return StringUtils.capitalize(meaning);
 	}
 	
 	
@@ -71,7 +72,7 @@ public class RepositoryDAO {
 		int deletedRows=0;
 			try {
 				PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement("delete from repository where word=?");
-				preparedStatement.setString(1, word);
+				preparedStatement.setString(1, StringUtils.capitalize(word));
 				deletedRows =  preparedStatement.executeUpdate();
 			} catch (SQLException e) {
 				e.printStackTrace();
