@@ -65,4 +65,20 @@ public class RepositoryDAO {
 	}
 	
 	
+	public String remove(String word){
+
+		String meaning = "Number of rows deleted = ";
+		int deletedRows=0;
+			try {
+				PreparedStatement preparedStatement = dataSource.getConnection().prepareStatement("delete from repository where word=?");
+				preparedStatement.setString(1, word);
+				deletedRows =  preparedStatement.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return meaning+deletedRows;
+	
+	}
+	
+	
 }

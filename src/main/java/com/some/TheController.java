@@ -37,7 +37,7 @@ public class TheController {
 	public ResponseEntity get(@PathVariable String word){
 		if(!StringUtils.isEmpty(word)){
 			String meaning = repositoryDAO.getMeaning(word);
-			return ResponseEntity.ok("meaning");
+			return ResponseEntity.ok(meaning);
 			
 		}else{
 			return ResponseEntity.ok().body("Invalid Input");
@@ -50,4 +50,17 @@ public class TheController {
 			List<AliceInWords> theList = repositoryDAO.getAll();
 			return ResponseEntity.ok(theList);
 	}
+	
+	
+	@RequestMapping(method=RequestMethod.POST,value="/remove/{word}")
+	public ResponseEntity insert(@PathVariable String word){
+		if(!StringUtils.isEmpty(word)){
+			String message = repositoryDAO.remove(word);
+			return ResponseEntity.ok(message);
+			
+		}else{
+			return ResponseEntity.ok().body("Invalid Input");
+		}
+	}
+	
 }
