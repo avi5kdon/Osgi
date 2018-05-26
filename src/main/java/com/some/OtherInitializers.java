@@ -4,8 +4,14 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.http.HttpHeaders;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.web.context.annotation.RequestScope;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 public class OtherInitializers {
@@ -26,5 +32,19 @@ public class OtherInitializers {
 	@Bean
 	public HttpHeaders httpHeaders(){
 		return new HttpHeaders();
+	}
+	
+	@Bean
+	@RequestScope
+	public ResponseBean responseBean(){
+		return new ResponseBean();
+	}
+	
+	@Bean
+	public ObjectMapper objectMapper(){
+		ObjectMapper objectMapper = new ObjectMapper();
+		 objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+		 return objectMapper;
+		 
 	}
 }

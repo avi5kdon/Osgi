@@ -29,14 +29,13 @@ public class TheController {
 	@Autowired
 	RepositoryDAO repositoryDAO;
 	
-	@Autowired
-	ResponseBean responseBean;
 	
 	@Autowired
 	HttpHeaders httpHeaders;
 	
 	@RequestMapping(method=RequestMethod.POST,value="/insert")
 	public ResponseEntity insert(@RequestBody AliceInWords aliceInWords){
+		ResponseBean responseBean = new ResponseBean();
 		if(aliceInWords != null && !StringUtils.isEmpty(aliceInWords.getWord()) && !StringUtils.isEmpty(aliceInWords.getWord())){
 			int numberx = repositoryDAO.insert(aliceInWords);
 			responseBean.setResponse("Successfully Inserted "+numberx+" Rows");
@@ -50,6 +49,7 @@ public class TheController {
 	
 	@RequestMapping(method=RequestMethod.GET,value="/get/{word}")
 	public ResponseEntity get(@PathVariable String word){
+		ResponseBean responseBean = new ResponseBean();
 		if(!StringUtils.isEmpty(word)){
 			String meaning = repositoryDAO.getMeaning(word);
 			responseBean.setResponse(meaning);
